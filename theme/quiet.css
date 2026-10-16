@@ -15,6 +15,15 @@
  */
 
 /*
+ * フォントは Google Fonts からも読み込む（Noto 未インストールの閲覧環境向け）。
+ * 本文は Noto Sans JP をそのまま使う。等幅は別名 "Quiet Web Mono" と
+ * 下の "Quiet Code CJK" の Web 版（quiet-webfonts、tools/gen_webfonts.py で生成）で、
+ * インストール済みのローカルの Noto が優先される。
+ */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap");
+@import "quiet-webfonts";
+
+/*
  * コード中の日本語を「ちょうど 2 桁」幅にそろえるための別名フォント。
  * Noto Sans Mono の 1 桁 = 0.6em なので、全角字形を 1.2em に拡大する。
  * （行末コメントの縦位置がそろう。全角 1 文字 = 2 桁と数えればよい）
@@ -51,7 +60,7 @@
   --code-border: #e4e0d6;
 
   --font-body: "Noto Sans JP", "Noto Sans CJK JP", sans-serif;
-  --font-code: "Noto Sans Mono", "DejaVu Sans Mono", "Quiet Code CJK",
+  --font-code: "Noto Sans Mono", "Quiet Web Mono", "DejaVu Sans Mono", "Quiet Code CJK",
     "Noto Sans CJK JP", "Noto Sans JP", monospace;
 }
 

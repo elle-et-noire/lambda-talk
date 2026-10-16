@@ -9,9 +9,9 @@ size: 16:9
 <!-- _class: title -->
 <!-- _paginate: false -->
 
-# Python からクラスも数も消す
+# ラムダ計算を Python で動かす
 
-## ラムダ計算入門
+## 1 引数の lambda で真偽値・数・再帰を作る
 
 2026 年 10 月　サンプル講義
 
@@ -47,7 +47,7 @@ AND = lambda a: lambda b: a(b)(FALSE)                 # 両方真か
 ZERO = lambda f: lambda x: x                         # f を 0 回
 SUCC = lambda n: lambda f: lambda x: f(n(f)(x))       # 1 回追加
 ADD = lambda m: lambda n: m(SUCC)(n)                 # m 回 SUCC
-to_int = lambda n: n(lambda k: k + 1)(0)               # 窓その2
+to_int = lambda n: n(lambda k: k + 1)(0)              # 数に変換
 print(to_int(ADD(SUCC(ZERO))(SUCC(SUCC(ZERO)))))   # => 3 になる
 assert to_int(ZERO) == 0, "ZERO must be 0 (64 chars wide)......"
 ```
@@ -63,7 +63,7 @@ assert to_int(ZERO) == 0, "ZERO must be 0 (64 chars wide)......"
 - 用語は初出時に英語を併記する：α変換 (alpha conversion)
 - コードは上から累積実行される
   - 使う名前は、それより前のスライドで定義する
-  - 観測用関数（窓）は小文字の `to_` で始める
+  - 結果を Python の値に変換する関数は、小文字の `to_` で始める
 - 発展スライドは飛ばしても話がつながる
 
 > 引用：計算に本当に必要なものは何か？

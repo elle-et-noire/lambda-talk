@@ -1,5 +1,5 @@
-# λ計算 × Python 講義スライドのビルド
-#   make html | pdf | pdf-notes | png | check | test | all | sample | clean
+# 講義スライド「ラムダ計算を Python で動かす」のビルド
+#   make html | pdf | pdf-notes | png | check | test | all | sample | webfonts | clean
 # ブラウザを変えたいときは CHROME_PATH=/path/to/chrome make pdf
 
 MARP    ?= npx --yes @marp-team/marp-cli@4.5.1
@@ -7,14 +7,14 @@ PY      ?= .venv/bin/python
 SRC     := slides/lambda.md
 SAMPLE  := slides/_sample.md
 OUT     := out
-DEPS    := $(SRC) theme/quiet.css .marprc.yml
+DEPS    := $(SRC) theme/quiet.css theme/quiet-webfonts.css .marprc.yml
 
 MARP_OPTS := --config-file .marprc.yml --no-stdin
 ifneq ($(strip $(CHROME_PATH)),)
 BROWSER_OPTS := --browser-path "$(CHROME_PATH)"
 endif
 
-.PHONY: all html pdf pdf-notes png check test time sample clean
+.PHONY: all html pdf pdf-notes png check test time sample webfonts clean
 
 all: check html pdf
 
@@ -55,3 +55,7 @@ clean:
 # スピーカーノートの「目安 N 分」を集計（必須／標準／全部入り）
 time:
 	$(PY) tools/tally_time.py $(SRC)
+
+# テーマの Web フォント定義 theme/quiet-webfonts.css を Google Fonts から作り直す
+webfonts:
+	$(PY) tools/gen_webfonts.py
