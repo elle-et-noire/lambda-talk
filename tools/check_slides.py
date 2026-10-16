@@ -89,6 +89,24 @@ def extract_blocks(markdown):
                          f"at line {first_line - 1}")
 
 
+ANCHOR_ID = re.compile(r'\bid="([^"]+)"')
+ANCHOR_REF = re.compile(r'\]\(#([^)\s]+)\)|href="#([^"]+)"')
+
+
+def broken_anchors(markdown):
+    """Yield (line, target) for in-page links without a matching id.
+
+    Numeric targets are Marp slide numbers and are not checked; other
+    targets must be written as explicit id="..." attributes.
+    """
+    ids = set(ANCHOR_ID.findall(markdown))
+    for number, line in enumerate(markdown.splitlines(), 1):
+        for match in ANCHOR_REF.finditer(line):
+            target = match[1] or match[2]
+            if not target.isdigit() and target not in ids:
+                yield number, target
+
+
 def definitions(tree):
     """Yield top-level names, RHS/function nodes, and source locations."""
     for node in tree.body:
@@ -266,8 +284,12 @@ def check(path, preload_core=False):
         counts["failures"] += 1
         print(f"FAIL slide {block.slide}, markdown line {line}: {message}")
 
+    markdown = path.read_text(encoding="utf-8")
+    for line, target in broken_anchors(markdown):
+        counts["failures"] += 1
+        print(f"FAIL markdown line {line}: link target #{target} not found")
     try:
-        blocks = list(extract_blocks(path.read_text(encoding="utf-8")))
+        blocks = list(extract_blocks(markdown))
     except ValueError as error:
         print(f"FAIL {path}: {error}")
         return 1

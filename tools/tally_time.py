@@ -25,7 +25,7 @@ per_ch = defaultdict(lambda: defaultdict(float))
 for i, s in enumerate(slides, 1):
     m = re.search(r"<!-- _class: ([^>]*?) -->", s)
     cls = m.group(1).split() if m else []
-    cm = re.search(r'<span class="num">(\d+)</span>', s)
+    cm = re.search(r'<span class="num"[^>]*>(\d+)</span>', s)
     if cm:
         chapter = int(cm.group(1)); fizz = False
     if "FizzBuzz を関数だけで" in s:

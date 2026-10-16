@@ -5,6 +5,8 @@ paginate: true
 math: katex
 size: 16:9
 title: Python からクラスも数も消す（ラムダ計算）
+author: elle-et-noire
+description: Python の lambda だけで真偽値・自然数・足し算・再帰を作るラムダ計算入門
 lang: ja
 ---
 
@@ -16,6 +18,12 @@ lang: ja
 ## ラムダ計算 (lambda calculus) 入門
 
 lambda だけで真偽値・自然数・足し算を作り、最後は Y コンビネータで再帰を書きます。計算の最小単位を体験できます。
+
+<div class="small">
+
+elle-et-noire ・ [github.com/elle-et-noire/lambda-talk](https://github.com/elle-et-noire/lambda-talk)
+
+</div>
 
 <!--
 目安 0.5 分。こんにちは。今日は Python の lambda だけを使って、ふだん当たり前に使っている真偽値や数、足し算を自分で作ってみます。最後は Y コンビネータという仕掛けで再帰まで書きます。数もクラスも if もない世界で、計算の最小単位は何かを体験してもらうのが今日のゴールです。
@@ -36,8 +44,14 @@ lambda だけで真偽値・自然数・足し算を作り、最後は Y コン�
 to_int(FACT(FIVE))   →   120
 ```
 
+<div class="note">
+
+手を動かす用：[Colab ノートブック（lambda.ipynb）](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb)。§番号＝章番号
+
+</div>
+
 <!--
-目安 0.5 分。今日作るものはこの 4 つです。真偽値、自然数、足し算、そして再帰です。最後には、lambda だけで作った階乗 FACT に、lambda だけで作った 5 を渡して、120 が出てくるところまで行きます。to_int は結果を見るための窓で、すぐ後で説明します。
+目安 0.5 分。今日作るものはこの 4 つです。真偽値、自然数、足し算、そして再帰です。最後には、lambda だけで作った階乗 FACT に、lambda だけで作った 5 を渡して、120 が出てくるところまで行きます。to_int は結果を見るための窓で、すぐ後で説明します。今日のコードは Colab のノートブックにまとめてあり、章と同じ番号の節で手元でも試せます。
 -->
 
 ---
@@ -68,7 +82,7 @@ to_int(FACT(FIVE))   →   120
 
 名前付けは**略記だけ**。自分自身を参照する名前付け（再帰定義）は禁止。
 
-<p class="note">「自分の名前を呼ばずに再帰できるか」が 6 章（Y コンビネータ）の動機になる。</p>
+<p class="note">「自分の名前を呼ばずに再帰できるか」が <a href="#ch6">6 章</a>（Y コンビネータ）の動機になる。</p>
 
 <!--
 目安 0.75 分。ルールです。使ってよいのは、引数が 1 つの lambda と、関数を呼ぶことと、名前を付けることだけです。名前はあくまで長い式の略記で、名前を中身の式に置き換えても意味が変わらない、という約束です。だから、定義の中で自分自身の名前を使う、つまり再帰定義は禁止です。これが 6 章の Y コンビネータの動機になります。数値リテラル、True と False、if、class、足し算や比較の演算子、def による再帰は使いません。
@@ -84,8 +98,8 @@ to_int(FACT(FIVE))   →   120
 |---|---|---|
 | `TRUE`、`FALSE` | `to_bool` | `True`、`False` |
 | `ZERO`、`SUCC(...)` | `to_int` | `0`、`1`、`2`、…… |
-| リスト（7 章） | `to_list` | `[...]` |
-| 文字列（7 章） | `to_str` | `'FizzBuzz'` |
+| リスト（[7 章](#ch7)） | `to_list` | `[...]` |
+| 文字列（[7 章](#ch7)） | `to_str` | `'FizzBuzz'` |
 
 窓は**純粋な世界の外側**にある。結果を見るだけで、計算には使わない。
 
@@ -101,15 +115,15 @@ to_int(FACT(FIVE))   →   120
 
 | 章 | 内容 | 必須 | 発展 |
 |---|---|---:|---:|
-| 1 | 導入：Church と Turing | 3.5 分 | |
-| 2 | 文法と評価：β簡約 | 9.5 分 | 5 分 |
-| 3 | チャーチ真偽値 | 8 分 | 2 分 |
-| 4 | チャーチ数：足し算・掛け算 | 9.5 分 | 4 分 |
-| 5 | ペアと引き算 | 5 分 | 6 分 |
-| 6 | 再帰と Y コンビネータ（山場） | 16.5 分 | 2 分 |
-| 7 | リストと FizzBuzz | | 17.5 分 |
-| 8 | SKI コンビネータ | | 10 分 |
-| 9 | まとめと先へ | 3 分 | 1 分 |
+| [1](#ch1) | 導入：Church と Turing | 3.5 分 | |
+| [2](#ch2) | 文法と評価：β簡約 | 9.5 分 | 5 分 |
+| [3](#ch3) | チャーチ真偽値 | 8 分 | 2 分 |
+| [4](#ch4) | チャーチ数：足し算・掛け算 | 9.5 分 | 4 分 |
+| [5](#ch5) | ペアと引き算 | 5 分 | 6 分 |
+| [6](#ch6) | 再帰と Y コンビネータ（山場） | 16.5 分 | 2 分 |
+| [7](#ch7) | リストと FizzBuzz | | 17.5 分 |
+| [8](#ch8) | SKI コンビネータ | | 10 分 |
+| [9](#ch9) | まとめと先へ | 3 分 | 1 分 |
 
 </div>
 
@@ -123,7 +137,7 @@ to_int(FACT(FIVE))   →   120
 
 <!-- _class: chapter -->
 
-# <span class="num">1</span>導入
+# <span class="num" id="ch1">1</span>導入
 
 目安 3.5 分
 
@@ -208,9 +222,11 @@ $\lambda$ → `lambda`、ドット → コロン、並べて書く → 括弧で
 
 <!-- _class: chapter -->
 
-# <span class="num">2</span>文法と評価
+# <span class="num" id="ch2">2</span>文法と評価
 
 目安 9.5 分（発展 +5 分）
+
+[Colab §2 で試す](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec2)
 
 <!--
 目安 0.25 分。ラムダ計算の文法と、式がどう計算されるかを見ます。ここが今日の全部の土台です。
@@ -461,7 +477,7 @@ $$\lambda x.\,M\,x \;\to_\eta\; M$$
 
 - 「受け取って、そのまま M に渡す」関数は M と同じふるまい
 - Python では `lambda v: f(v)` と `f` は同じ結果
-- ただし **`f` を評価するタイミング**が変わる（6 章の Z の伏線）
+- ただし **`f` を評価するタイミング**が変わる（[6 章](#ch6)の Z の伏線）
 
 <!--
 目安 1.5 分。発展です。λx. M x は、受け取った x をそのまま M に渡すだけなので、M と同じふるまいをします。これを η変換と呼びます。Python でも lambda v: f(v) と f は、呼べば同じ結果になります。ただし大事な違いがあって、lambda v: f(v) と書くと、f の部分は呼ばれるまで評価されません。この「包むと評価が遅れる」性質が、6 章の Z コンビネータの鍵になります。
@@ -473,7 +489,7 @@ $$\lambda x.\,M\,x \;\to_\eta\; M$$
 
 ## 評価戦略：どの簡約基から簡約するか
 
-$\Omega = (\lambda x.\,x\;x)\,(\lambda x.\,x\;x)$ は簡約しても自分に戻る（6 章）。
+$\Omega = (\lambda x.\,x\;x)\,(\lambda x.\,x\;x)$ は簡約しても自分に戻る（[6 章](#ch6)）。
 
 $$(\lambda x.\,a)\;\Omega$$
 
@@ -504,7 +520,7 @@ $$(\lambda x.\,a)\;\Omega$$
 
 - 使わない引数でも計算される：正格評価 (strict evaluation)
 - ただし **lambda の中身は呼ばれるまで計算しない**
-- 3 章：`IF` が両方の枝を計算／6 章：Y コンビネータが止まらない
+- [3 章](#ch3)：`IF` が両方の枝を計算／[6 章](#ch6)：Y コンビネータが止まらない
 
 対策はどちらも「`lambda _: ...` で包んで、後で開ける」。
 
@@ -517,9 +533,11 @@ $$(\lambda x.\,a)\;\Omega$$
 
 <!-- _class: chapter -->
 
-# <span class="num">3</span>チャーチ真偽値
+# <span class="num" id="ch3">3</span>チャーチ真偽値
 
 目安 8 分（発展 +2 分）
+
+[Colab §3 で試す](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec3)
 
 <!--
 目安 0.25 分。この章では True も False も if も使わずに、真偽値と分岐を関数だけで作ります。手がかりは「if は 2 つのうちどちらかを選ぶもの」という見方です。
@@ -717,7 +735,7 @@ True
 2. `IF` で包みを 1 つ選ぶ
 3. 選んだ包みに `(ID)` を渡して、はじめて中身を計算する
 
-包んだ式をサンク (thunk) と呼ぶ。6 章の **Z コンビネータ** で再帰を書くときの鍵
+包んだ式をサンク (thunk) と呼ぶ。[6 章](#ch6)の **Z コンビネータ** で再帰を書くときの鍵
 
 <!--
 目安 0.75 分。lambda で包むと、包み自体は関数という値なのですぐ作れますが、中身は呼ばれるまで計算されません。IF は包みを選ぶだけで、選ばれた包みに ID を渡したときに初めて中身が動きます。渡す値は何でもよいのですが、2 章の ID を使うと決めておきます。この「サンクで包んで選んでから実行する」形は、6 章で再帰を書くときにそのまま使います。ここが伏線です。
@@ -769,9 +787,11 @@ XOR = lambda a: lambda b: a(NOT(b))(b)
 
 <!-- _class: chapter -->
 
-# <span class="num">4</span>チャーチ数
+# <span class="num" id="ch4">4</span>チャーチ数
 
 目安 9.5 分（発展 +4 分）
+
+[Colab §4 で試す](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec4)
 
 <!--
 目安 0.25 分。次は数値リテラルなしで自然数を作ります。真偽値を「選ぶ」というふるまいで表したのと同じく、数を「繰り返す回数」というふるまいで表します。
@@ -1040,7 +1060,7 @@ IS_ZERO = lambda n: n(lambda _: FALSE)(TRUE)
 - 目標：`IS_EVEN(FOUR)` は真、`IS_EVEN(SEVEN)` は偽
 - `IS_ZERO` と同じく、n に f と x を渡す
 
-<p class="note">ヒント：0 は偶数。1 増えるたびに偶奇は反転する。反転する関数は 3 章にあった。</p>
+<p class="note">ヒント：0 は偶数。1 増えるたびに偶奇は反転する。反転する関数は <a href="#ch3">3 章</a>にあった。</p>
 
 <!--
 目安 2 分。発展の演習です。IS_ZERO の形を思い出しながら、f と x に何を渡せばよいか考えてもらいます。1 分半ほど待ちます。
@@ -1062,7 +1082,7 @@ IS_EVEN = lambda n: n(NOT)(TRUE)
 ```
 
 - `TRUE`（0 は偶数）から始めて、`NOT` を n 回
-- 3 章の真偽値と 4 章の数が、そのまま組み合わさる
+- [3 章](#ch3)の真偽値と [4 章](#ch4)の数が、そのまま組み合わさる
 
 <!--
 目安 1 分。x に TRUE、f に NOT を渡します。NOT を偶数回かければ TRUE のまま、奇数回なら FALSE です。真偽値も数も関数なので、数に真偽値の関数をそのまま渡せます。
@@ -1073,9 +1093,11 @@ IS_EVEN = lambda n: n(NOT)(TRUE)
 
 <!-- _class: chapter -->
 
-# <span class="num">5</span>ペアと引き算
+# <span class="num" id="ch5">5</span>ペアと引き算
 
 目安 5 分（発展 +6 分）
+
+[Colab §5 で試す](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec5)
 
 <!-- 目安 0.25 分。足し算・掛け算・累乗はできました。次は引き算です。実は引き算はずっと難しく、そのための道具として、まず「ペア」を作ります。後半の発展は引き算と大小比較で、7 章のリストを扱うならここも必要です。 -->
 
@@ -1181,7 +1203,7 @@ SUB = lambda m: lambda n: ...
 # to_int(SUB(SEVEN)(THREE)) が 4 になれば正解
 ```
 
-<p class="note">ヒント：数 n は「何かを n 回適用する」関数。m に何を n 回適用すればよい？ 4 章の ADD も思い出す。</p>
+<p class="note">ヒント：数 n は「何かを n 回適用する」関数。m に何を n 回適用すればよい？ <a href="#ch4">4 章</a>の ADD も思い出す。</p>
 
 <!-- 目安 2 分。発展の演習です。1 分半ほど考えてもらいます。ヒントは 4 章の ADD です。ADD は「n に SUCC を m 回」でした。SUB は「m に PRED を n 回」なので、関数を替えるだけでなく、m と n の役割も入れ替えます。そこに気づけば一行です。 -->
 
@@ -1232,9 +1254,11 @@ EQ = lambda m: lambda n: AND(LEQ(m)(n))(LEQ(n)(m))
 
 <!-- _class: chapter -->
 
-# <span class="num">6</span>再帰と Y コンビネータ
+# <span class="num" id="ch6">6</span>再帰と Y コンビネータ
 
 目安 16.5 分（発展 +2 分）
+
+[Colab §6 で試す](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec6)
 
 <!-- 目安 0.25 分。今日の山場です。ここまでで真偽値、数、引き算まで作りましたが、まだ「繰り返し」がありません。この章では、自分の名前を使えないというルールのまま、再帰を手作りします。いきなり答えを見せるのではなく、一歩ずつ組み立てていきます。 -->
 
@@ -1252,7 +1276,7 @@ FACT = lambda n: (
 )
 ```
 
-- ふつうの `fact` を、3 章のサンクの形でそのまま写した
+- ふつうの `fact` を、[3 章](#ch3)のサンクの形でそのまま写した
 - でも右辺に **FACT 自身** がいる。ルール違反
 - 名前は長い式の略記。展開すると FACT の中に FACT の中に……で終わらない
 
@@ -1422,7 +1446,7 @@ $$Y = \lambda f.\,(\lambda x.\,f\,(x\,x))\,(\lambda x.\,f\,(x\,x)) \qquad \mathr
 
 **ふつうの再帰の形 F を渡すと、再帰する関数が返ってくる**
 
-<p class="note">コンビネータ (combinator)：自由変数のない λ 項。Y も、この後の Z も、8 章の S・K・I もこれ。</p>
+<p class="note">コンビネータ (combinator)：自由変数のない λ 項。Y も、この後の Z も、<a href="#ch8">8 章</a>の S・K・I もこれ。</p>
 
 <!-- 目安 1 分。さっきの結果を使って組み立て直します。FACT は FACT_GEN を FACT_GEN に渡したもので、FACT_GEN は λs. F (s s) と β同値でした。これを 2 つ並べるだけです。ここで F は階乗に限らず何でもよいので、F を引数 f にくくり出します。変数名 s は x に付け替えました。これが Y コンビネータです。コンビネータとは、2 章の自由変数を 1 つも含まない λ 項のことです。ふつうの再帰の形をした関数を渡すと、再帰する関数を作ってくれます。天下りに覚える式ではなく、自分を引数でもらう工夫から出てきた式だ、というのがこの章の一番伝えたいことです。 -->
 
@@ -1512,7 +1536,7 @@ $$\lambda v.\,M\,v \quad\text{と}\quad M \quad\text{は、呼べば同じ結果
 
 - これを η展開 (eta expansion) という（v は M に出てこないとする）
 - ただし違いが 1 つ：Python は lambda の **中身を呼ばれるまで計算しない**
-- 3 章のサンク `lambda _: A` と同じ発想：必要になるまで計算しない
+- [3 章](#ch3)のサンク `lambda _: A` と同じ発想：必要になるまで計算しない
 
 ```python
 >>> lambda v: omega(omega)(v)    # 包むだけなら落ちない
@@ -1655,9 +1679,11 @@ FIB = Z(lambda fib: lambda n: (
 
 <!-- _class: chapter optional -->
 
-# <span class="num">7</span>リスト
+# <span class="num" id="ch7">7</span>リスト
 
 発展 12 分（FizzBuzz +5.5 分）
+
+[Colab §7 で試す](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec7)
 
 <!--
 目安 0.25 分。ここから発展の章です。5 章のペアを入れ子にしてリストを作り、最後は数も文字列もない世界で FizzBuzz を動かします。5 章発展の LEQ と SUB を使うので、5 章発展を飛ばした場合はこの章も飛ばします。
@@ -1761,7 +1787,7 @@ RANGE = Z(lambda range_: lambda m: lambda n: (
 [1, 2, 3, 4, 5]
 ```
 
-- 6 章の Z と、いつもの `IF(c)(lambda _: A)(lambda _: B)(ID)`
+- [6 章](#ch6)の Z と、いつもの `IF(c)(lambda _: A)(lambda _: B)(ID)`
 - m ≤ n なら「m を先頭に、残りは m+1 から」
 
 <!--
@@ -2121,9 +2147,11 @@ FIFTEEN = MUL(THREE)(FIVE)
 
 <!-- _class: chapter optional -->
 
-# <span class="num">8</span>SKI コンビネータ
+# <span class="num" id="ch8">8</span>SKI コンビネータ
 
 発展 10 分
+
+[Colab §8 で試す](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec8)
 
 <!--
 目安 0.25 分。最後の発展章です。ここまでは 1 引数の lambda と適用だけで計算してきましたが、この章ではその lambda すら消してしまいます。
@@ -2219,7 +2247,7 @@ $$K\,a\,b \;\to\; ?$$
 
 $$K\,I\,a\,b \;\to\; ?$$
 
-- どちらも、3 章で見たものと同じふるまい
+- どちらも、[3 章](#ch3)で見たものと同じふるまい
 
 <p class="note">ヒント：2 つから 1 つを選んでいる</p>
 
@@ -2366,7 +2394,7 @@ RecursionError: maximum recursion depth exceeded
 - $I = S\,K\,K$ なので、本当は **$S$ と $K$ の 2 つ** で足りる
 - ラムダ計算と同じ計算能力：**チューリング完全** (Turing complete)
 
-<p class="note">6 章の Z も、FizzBuzz も、原理的には S と K の適用だけで書ける（とても長くなる）。</p>
+<p class="note"><a href="#ch6">6 章</a>の Z も、FizzBuzz も、原理的には S と K の適用だけで書ける（とても長くなる）。</p>
 
 <!--
 目安 1 分。まとめです。ブラケット抽象を使えば、どんな λ 項からも λ を消せます。自由変数はそのまま残りますが、自由変数のない閉じた項なら、S、K、I の適用だけの式になります。しかも I は S K K なので、S と K の 2 つだけで足ります。ラムダ計算と同じ計算能力を持つので、チューリング機械とも同じ、つまりチューリング完全です。この章で見た Z や FizzBuzz も、原理的には S と K を並べた式で書けます。1 章で「計算に本当に必要なものは？」と問いましたが、極端に言えば答えは「2 つの部品と適用」です。
@@ -2377,9 +2405,11 @@ RecursionError: maximum recursion depth exceeded
 
 <!-- _class: chapter -->
 
-# <span class="num">9</span>まとめと先へ
+# <span class="num" id="ch9">9</span>まとめと先へ
 
 目安 3 分（発展 +1 分）
+
+[Colab §9 で試す（性能の実験も）](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb#scrollTo=sec9)
 
 <!--
 目安 0.25 分。最後に、今日作ったものを振り返って、この先につながる話をいくつかします。
@@ -2450,7 +2480,7 @@ $$x : A \to B \quad\text{かつ}\quad x : A \qquad\Rightarrow\qquad A = A \to B$
 
 | 計算 | 最後まで動いた最大の $n$ | 次の値 |
 |---|---:|---|
-| `FIB`（6 章発展） | 16 | RecursionError |
+| `FIB`（[6 章](#ch6)発展） | 16 | RecursionError |
 | `SUM_TO_N` | 44 | RecursionError |
 | `FACT` | 11（約 10 秒） | 15 秒で打ち切り（時間切れ） |
 
@@ -2490,6 +2520,14 @@ $$x : A \to B \quad\text{かつ}\quad x : A \qquad\Rightarrow\qquad A = A \to B$
 
 質問をどうぞ。
 
+<div class="small">
+
+スライドとコードはここにあります：[github.com/elle-et-noire/lambda-talk](https://github.com/elle-et-noire/lambda-talk)
+
+参照実装 [code/lambda_core.py](https://github.com/elle-et-noire/lambda-talk/blob/main/code/lambda_core.py) ・ [Colab で開く](https://colab.research.google.com/github/elle-et-noire/lambda-talk/blob/main/notebooks/lambda.ipynb)
+
+</div>
+
 <!--
-目安 0.25 分。今日のまとめは一言です。計算の最小単位は、関数を作ることと、関数を呼ぶこと。それだけで真偽値も数も再帰も作れました。ありがとうございました。質問があればどうぞ。
+目安 0.25 分。今日のまとめは一言です。計算の最小単位は、関数を作ることと、関数を呼ぶこと。それだけで真偽値も数も再帰も作れました。スライドと今日のコードは GitHub の elle-et-noire/lambda-talk に置いてあります。Colab でもそのまま動かせるので、家で続きを試してみてください。ありがとうございました。質問があればどうぞ。
 -->

@@ -39,6 +39,16 @@ def test_failures_have_slide_and_exact_markdown_line(tmp_path):
     assert "FAIL slide 2, markdown line 8" in result.stdout
 
 
+def test_in_page_link_targets_must_exist(tmp_path):
+    result = run_fixture(tmp_path, '# <span id="ch1">1</span>\n---\n'
+                         "[1 章](#ch1) / [3 枚目](#3)\n"
+                         '<a href="#ch2">2 章</a>\n'
+                         "```python\nX = lambda x: x\n```\n")
+    assert result.returncode == 1
+    assert "FAIL markdown line 4: link target #ch2 not found" in result.stdout
+    assert "#ch1" not in result.stdout and "#3" not in result.stdout
+
+
 def test_exec_failure(tmp_path):
     result = run_fixture(tmp_path, "```python\nMISSING(NAME)\n```\n")
     assert result.returncode == 1

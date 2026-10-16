@@ -1,0 +1,72 @@
+# Marp スライドを HTML / PDF にビルドして GitHub Pages に公開する
+#   https://elle-et-noire.github.io/lambda-talk/          … HTML スライド
+#   https://elle-et-noire.github.io/lambda-talk/lambda.pdf … PDF
+name: Deploy slides to Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - slides/**
+      - theme/**
+      - tools/check_slides.py
+      - .marprc.yml
+      - Makefile
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.14"
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      # PDF 用。テーマは Noto 系フォントを local() で参照している
+      - name: Install fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends fonts-noto-cjk fonts-noto-mono
+
+      - name: Check slides
+        run: make check PY=python
+
+      - name: Build HTML / PDF
+        run: make html pdf
+
+      - name: Assemble site
+        run: |
+          mkdir -p _site
+          cp out/lambda.html _site/index.html
+          cp out/lambda.pdf _site/lambda.pdf
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
