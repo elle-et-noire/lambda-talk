@@ -7,6 +7,8 @@ from tools.check_slides import definitions, lint_tree
 
 ROOT = Path(__file__).resolve().parents[2]
 CORE = ROOT / "code" / "lambda_core.py"
+# FACT_GEN の引数名は、クラスのメソッドを連想させないよう self から s に変えた
+RENAMED_PARAMETERS = {"self": "s"}
 
 
 def test_pure_world_rules_and_dependencies():
@@ -29,8 +31,16 @@ def test_outline_exact_definitions_and_parameters():
     spec = section.split("```python\n", 1)[1].split("```", 1)[0]
     exact_lines = [line for line in spec.splitlines()
                    if re.match(r"^(?:[A-Z_]+|omega) = ", line)]
+    tree = ast.parse("\n".join(exact_lines))
+    # plan/ は更新しない記録なので、企画後に変えた引数名はここで読み替える
+    for node in ast.walk(tree):
+        for name, renamed in RENAMED_PARAMETERS.items():
+            if isinstance(node, ast.arg) and node.arg == name:
+                node.arg = renamed
+            if isinstance(node, ast.Name) and node.id == name:
+                node.id = renamed
     expected = dict((name, ast.dump(rhs)) for name, rhs, _ in
-                    definitions(ast.parse("\n".join(exact_lines))))
+                    definitions(tree))
     actual = dict((name, ast.dump(rhs)) for name, rhs, _ in
                   definitions(ast.parse(CORE.read_text(encoding="utf-8"))))
     for name, rhs in expected.items():

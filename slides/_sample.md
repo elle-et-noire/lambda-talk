@@ -9,7 +9,7 @@ size: 16:9
 <!-- _class: title -->
 <!-- _paginate: false -->
 
-# ラムダ計算を Python で動かす
+# Lambda Calculus in Python
 
 ## 1 引数の lambda で真偽値・数・再帰を作る
 

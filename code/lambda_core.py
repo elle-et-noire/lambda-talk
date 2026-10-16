@@ -43,10 +43,10 @@ EQ = lambda m: lambda n: AND(LEQ(m)(n))(LEQ(n)(m))
 
 # 第6章: 再帰と不動点コンビネータ
 omega = lambda x: x(x)
-FACT_GEN = lambda self: lambda n: (
+FACT_GEN = lambda s: lambda n: (
     IF(IS_ZERO(n))
       (lambda _: ONE)
-      (lambda _: MUL(n)(self(self)(PRED(n))))
+      (lambda _: MUL(n)(s(s)(PRED(n))))
       (ID)
 )
 FACT_BODY = lambda fact: lambda n: (
