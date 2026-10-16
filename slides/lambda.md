@@ -112,8 +112,10 @@ Church（1936）はラムダ計算で、Turing（1936）はチューリング機
 - **Church–Turing thesis**：人が機械的な手順（アルゴリズム）で計算できる関数は、ちょうどこの定理の関数である、という主張で、これを受け入れると前のスライドの結果から、決定問題を判定する機械的な手順はないことになる
 - 「機械的な手順」は数学的に定義された概念ではないので、thesis は証明できる定理ではなく、計算可能性の定義として受け入れられている
 
+<p class="note">型を付けたラムダ計算は、Lean や Rocq（旧称 Coq）などの定理証明支援系 (proof assistant) の土台で、命題を型、証明を項として扱い、証明の検査を型検査で行う（Curry–Howard 対応）</p>
+
 <!--
-目安 1 分。1937 年に Turing は、ラムダ計算で定義できる関数とチューリング機械で計算できる関数が一致することを証明しており、これは定理です。これに対して Church–Turing thesis は、人が機械的な手順で計算できる関数はちょうどこれらの関数である、という主張で、これを受け入れると、前のスライドの結果から、決定問題を判定する機械的な手順はないことになります。「機械的な手順」は数学的に定義された概念ではないので thesis は証明できませんが、独立に提案されたモデルがどれも同じ関数の範囲を与えたことから、計算可能性の定義として受け入れられています。
+目安 1 分。1937 年に Turing は、ラムダ計算で定義できる関数とチューリング機械で計算できる関数が一致することを証明しており、これは定理です。これに対して Church–Turing thesis は、人が機械的な手順で計算できる関数はちょうどこれらの関数である、という主張で、これを受け入れると、前のスライドの結果から、決定問題を判定する機械的な手順はないことになります。「機械的な手順」は数学的に定義された概念ではないので thesis は証明できませんが、独立に提案されたモデルがどれも同じ関数の範囲を与えたことから、計算可能性の定義として受け入れられています。なお、型を付けたラムダ計算は、Lean や、2025 年に Coq から改名した Rocq などの定理証明支援系の土台で、命題を型、証明を項として扱い、証明の検査を型検査で行います。
 -->
 
 ---
@@ -174,6 +176,14 @@ $\lambda$ → `lambda`、ドット → コロン、$M\,N$ → `M(N)`。数や `i
 
 ## カリー化：2 引数の関数を `f(a)(b)` で呼ぶ
 
+| | λ記法 | Python |
+|---|---|---|
+| 2 引数の関数 $f$ | $\lambda x.\,\lambda y.\,x$ | `lambda x: lambda y: x` |
+| 1 つ目だけ渡す | $f\,a$ | `f(a)`：`y` を受け取る関数を返す |
+| 2 つとも渡す | $f\,a\,b = (f\,a)\,b$（適用は左結合） | `f(a)(b)` |
+
+`lambda x, y: x` を関数を返す関数で書く：カリー化 (currying)
+
 ```python
 >>> (lambda x: lambda y: x)("a")
 <function <lambda>.<locals>.<lambda> at 0x...>
@@ -181,39 +191,40 @@ $\lambda$ → `lambda`、ドット → コロン、$M\,N$ → `M(N)`。数や `i
 'a'
 ```
 
-- `lambda x, y: x` の代わりに `lambda x: lambda y: x` と書く：カリー化 (currying)
-- `f(a)` は、残りの引数 `y` を受け取る関数を返す
-- λ記法の $f\,a\,b$ は $(f\,a)\,b$ と読み（適用は左結合）、Python の `f(a)(b)` に当たる
-
 <!--
-目安 0.75 分。ここでは lambda の引数を 1 つだけにしているので、Python なら lambda x, y: x と書く 2 引数の関数は、x を受け取って「y を受け取る関数」を返す形で lambda x: lambda y: x と書きます。これをカリー化と呼びます。f(a) だけを評価すると y を待つ関数が返ってきて、それに b を渡すと答えが出ます。λ記法では f a b と並べて書き、左から (f a) b と読むので、Python の f(a)(b) と同じです。
+目安 0.75 分。ここでは lambda の引数を 1 つだけにしているので、Python なら lambda x, y: x と書く 2 引数の関数は、x を受け取って「y を受け取る関数」を返す形で lambda x: lambda y: x と書き、これをカリー化と呼びます。λ記法では λx. λy. x です。この関数 f に 1 つ目の引数 a だけを渡すと y を待つ関数が返ってきて、それに b を渡すと答えが出ます。λ記法では f a b と並べて書き、左から (f a) b と読むので、Python の f(a)(b) と同じです。
 -->
 
 ---
 
 ## 束縛変数と自由変数：引数と外側の名前
 
+| | λ記法 | Python |
+|---|---|---|
+| 束縛変数 (bound variable) | $\lambda x.\,M$ の $M$ の中の $x$ | 引数・ローカル変数 |
+| 自由変数 (free variable) | どの $\lambda$ の引数でもない変数 | 外側のスコープの名前 |
+
 ```python
 >>> (lambda y: lambda x: (x, y))("外")("引数")
 ('引数', '外')
 ```
 
-内側の `lambda x: (x, y)` だけを見ると
-
-- `x`：この lambda の引数で、束縛変数 (bound variable) と呼ぶ
-- `y`：この lambda の外で決まる名前で、自由変数 (free variable) と呼ぶ
-
-Python の引数・ローカル変数が束縛変数、外側の関数やグローバルの名前の参照が自由変数に当たる
+内側の `lambda x: (x, y)` だけを見ると、`x` が束縛変数、`y` が自由変数
 
 <!--
-目安 0.5 分。lambda の引数として受け取る名前を束縛変数、その lambda の外で決まる名前を自由変数と呼びます。内側の lambda x: (x, y) では、x が束縛変数、y が自由変数です。Python では、引数やローカル変数が束縛変数、外側の関数やグローバルの名前を参照するのが自由変数です。
+目安 0.5 分。λx. M の本体に出てくる x のように、λ の引数として受け取る変数を束縛変数、その項のどの λ の引数でもない変数を自由変数と呼びます。Python では、引数やローカル変数が束縛変数、外側の関数やグローバルの名前を参照するのが自由変数に当たります。例の内側の lambda x: (x, y) だけを見ると、x が束縛変数、y が自由変数です。
 -->
 
 ---
 
-## β簡約：関数呼び出しで引数が本体に代入される
+## β簡約：引数を本体に代入する
 
-$$(\lambda x.\,M)\;N \;\to_\beta\; M[x := N]$$
+| | λ記法 | Python |
+|---|---|---|
+| 簡約基 (redex) | $(\lambda x.\,M)\;N$ | `(lambda x: M)(N)` |
+| β簡約 (beta reduction) | $(\lambda x.\,M)\;N \;\to_\beta\; M[x := N]$ | 本体 `M` を、`x` を `N` の値に<br>結び付けて評価する |
+
+代入 (substitution) $M[x := N]$：$M$ の自由な $x$ だけを $N$ に置き換える
 
 ```python
 >>> (lambda x: x(x))(ID)("a")          # ID(ID)("a") と同じ
@@ -222,22 +233,19 @@ $$(\lambda x.\,M)\;N \;\to_\beta\; M[x := N]$$
 'b'
 ```
 
-- 本体 M の x を引数 N に置き換える代入 (substitution) を行うのが β簡約 (beta reduction) で、Python の関数呼び出しに当たる
-- 置き換えるのは自由な x だけで、内側の `lambda x:` の x は内側の引数を指す
-- $(\lambda x.\,M)\;N$ の形を簡約基 (redex) と呼ぶ
-
 <!--
-目安 0.75 分。ラムダ計算の計算規則は β簡約で、λx.M に N を渡すと、本体 M の x を N で置き換えた式になります。この置き換えを代入と呼び、M[x := N] と書きます。Python の関数呼び出しと同じです。1 つ目の例では、本体 x(x) の x に ID が入って ID(ID) になります。置き換えるのは自由な x だけなので、2 つ目の例では、内側の lambda x の x は内側の引数を指し、"b" が返ります。(λx.M) N の形を簡約基と呼びます。
+目安 0.75 分。ラムダ計算の計算規則は β簡約です。(λx. M) N の形を簡約基と呼び、Python では lambda をその場で呼び出す式に当たります。β簡約は簡約基を M[x := N]、つまり本体 M の自由な x を N で置き換えた項に書き換え、この置き換えを代入と呼びます。Python は本体の文字列を書き換えず、x を N の値に結び付けて本体を評価しますが、結果は同じです。1 つ目の例では、本体 x(x) の x が ID になり、ID(ID) を評価します。2 つ目の例では、内側の lambda x の x は内側の引数を指すので、"b" が返ります。
 -->
 
 ---
 
 ## α変換：代入の前に引数名を付け替える
 
-- 引数名を付け替えても同じ関数：α変換 (alpha conversion)
-- 引数の自由変数と内側の引数が同名だと、文字どおりの代入で取り違えが起きる
-
-$$(\lambda x.\,\lambda y.\,x)\;y \;\to_\beta\; \lambda w.\,y \qquad (\lambda y.\,y \text{ は誤り})$$
+| | λ記法 | Python |
+|---|---|---|
+| α変換 (alpha conversion) | $\lambda x.\,x$ と $\lambda w.\,w$ | `lambda x: x` と `lambda w: w` |
+| 文字どおり代入（誤り） | $(\lambda x.\,\lambda y.\,x)\,y \to_\beta \lambda y.\,y$ | `lambda y: y` |
+| 付け替えてから代入 | $(\lambda x.\,\lambda w.\,x)\,y \to_\beta \lambda w.\,y$ | `lambda w: y` |
 
 ```python
 >>> (lambda y: (lambda x: lambda y: x)(y))("外")("内")
@@ -249,7 +257,7 @@ $$(\lambda x.\,\lambda y.\,x)\;y \;\to_\beta\; \lambda w.\,y \qquad (\lambda y.\
 ```
 
 <!--
-目安 0.75 分。引数名は付け替えても関数は変わらず、これを α変換と呼びます。α変換が必要になるのは代入のときです。λx.λy.x に外側の変数 y を渡すとき、本体の x を文字どおり y に置き換えると λy.y になり、外側の y が内側の引数 y と取り違えられます。Python で確かめると、1 行目は Python が実際に呼び出した結果で、"外" が返ります。2 行目は文字どおり代入した式で、"内" が返ります。3 行目のように、先に内側の y を w に付け替えてから代入すれば、正しい結果になります。
+目安 0.75 分。引数名は付け替えても関数は変わらず、これを α変換と呼びます。α変換が必要になるのは代入のときです。λx.λy.x に外側の変数 y を渡すとき、本体の x を文字どおり y に置き換えると λy.y になり、外側の y が内側の引数 y と取り違えられます。先に内側の y を w に付け替えてから代入すれば λw.y になり、外側の y を返す関数になります。Python で確かめると、1 行目は Python が実際に呼び出した結果で "外" が、2 行目は文字どおり代入した式で "内" が、3 行目は付け替えてから代入した式で "外" が返ります。
 -->
 
 ---
@@ -276,30 +284,9 @@ $$(\lambda x.\,\lambda y.\,x)\;y \;\to_\beta\; \lambda w.\,y \qquad (\lambda y.\
 
 <!-- _class: optional -->
 
-## η変換：`lambda v: f(v)` と `f` は同じ関数
-
-$$\lambda v.\,M\,v \;\to_\eta\; M \qquad (v \text{ は } M \text{ に自由に出てこない})$$
-
-```python
->>> (lambda v: len(v))("abc"), len("abc")
-(3, 3)
-```
-
-- 引数をそのまま M に渡す関数は M と同じ：η変換 (eta conversion)、逆向きは η展開 (eta expansion)
-- Python では評価のタイミングが違う：`lambda v: M(v)` は、呼ばれるまで M を評価しない
-- [6 章](#z-comb)の Z コンビネータで、この違いを使う
-
-<!--
-目安 0.75 分。発展です。受け取った v をそのまま M に渡すだけの関数 λv. M v は M と同じふるまいをし、これを η変換と呼びます。Python でも lambda v: len(v) と len は同じ結果を返します。逆向きに M を λv. M v に書き換えることは η展開と呼びます。ただし Python では違いが 1 つあり、lambda v: M(v) は呼ばれるまで M を評価しません。これは前のスライドで見た lambda の性質です。6 章の Z コンビネータは、この違いを使って Y が止まらない問題を解決します。
--->
-
----
-
-<!-- _class: optional -->
-
 ## 評価順序：正規順序と適用順序
 
-$\Omega = (\lambda x.\,x\;x)\,(\lambda x.\,x\;x)$ は簡約しても自分に戻るので、$(\lambda x.\,a)\;\Omega$ の結果は評価順序で変わり、Python は適用順序に近い
+$\Omega = (\lambda x.\,x\;x)\,(\lambda x.\,x\;x)$ は簡約しても自分に戻るので、$(\lambda x.\,a)\;\Omega$ の結果は評価順序で変わり、正格評価の Python は適用順序に近い
 
 | 評価順序 | 先に簡約する簡約基 | 結果 |
 |---|---|---|
@@ -314,7 +301,30 @@ RecursionError: maximum recursion depth exceeded
 ```
 
 <!--
-目安 1 分。発展です。項の中に簡約基が複数あるとき、どれから簡約するかを評価順序と呼びます。Ω は 6 章で出てくる、簡約しても自分自身に戻る項です。λx.a に Ω を渡すとき、外側の簡約基から、つまり関数を先に呼べば、x は使われないので a で終わり、これが正規順序です。内側、つまり引数から先に簡約する適用順序では、Ω の簡約が終わりません。Python は引数を先に評価するので適用順序に近く、この例は RecursionError になりますが、lambda の本体は呼ばれるまで評価しない点が違います。正規順序は、これ以上簡約できない形（正規形）があれば必ずそこへたどり着くことが知られています。
+目安 1 分。発展です。項の中に簡約基が複数あるとき、どれから簡約するかを評価順序と呼びます。Ω は 6 章で出てくる、簡約しても自分自身に戻る項です。λx.a に Ω を渡すとき、外側の簡約基から、つまり関数を先に呼べば、x は使われないので a で終わり、これが正規順序です。内側、つまり引数から先に簡約する適用順序では、Ω の簡約が終わりません。前のスライドのとおり Python は引数を先に評価するので適用順序に近く、この例は RecursionError になりますが、lambda の本体は呼ばれるまで評価しない点が違います。正規順序は、これ以上簡約できない形（正規形）があれば必ずそこへたどり着くことが知られています。
+-->
+
+---
+
+<!-- _class: optional -->
+
+## η変換：`lambda v: f(v)` と `f` は同じ関数
+
+| | λ記法 | Python |
+|---|---|---|
+| η変換 (eta conversion) | $\lambda v.\,M\,v \;\to_\eta\; M$ | `lambda v: M(v)` → `M` |
+| η展開 (eta expansion) | $M \;\to\; \lambda v.\,M\,v$ | `M` → `lambda v: M(v)` |
+
+```python
+>>> (lambda v: len(v))("abc"), len("abc")
+(3, 3)
+```
+
+- $v$ が $M$ に自由に出てこなければ、書き換えても呼んだ結果は同じ
+- Python では `lambda v: M(v)` は呼ばれるまで `M` を評価せず、[6 章](#z-comb)の Z コンビネータでこの違いを使う
+
+<!--
+目安 0.75 分。発展です。受け取った v をそのまま M に渡すだけの関数 λv. M v を M に書き換えることを η変換、逆向きに M を λv. M v に書き換えることを η展開と呼びます。v が M に自由に出てこなければ、書き換えても呼んだ結果は変わらず、Python でも lambda v: len(v) と len は同じ結果を返します。ただし Python では違いが 1 つあり、lambda v: M(v) は呼ばれるまで M を評価しません。これは正格評価のスライドで見た、lambda の本体は呼ばれるまで評価しないという性質です。6 章の Z コンビネータは、この違いを使って Y が止まらない問題を解決します。
 -->
 
 ---
@@ -999,28 +1009,14 @@ G(THREE) = MUL(THREE)( s(s)(TWO) )
 
 ---
 
-## `s(s)` を本体の外へ出す
-
-FACT_GEN の本体には `s(s)` という特殊な呼び方が混ざっているので、本体をふつうの `fact(n−1)` の形で書きたい
+## `s(s)` を本体の外へ出すと `FACT_BODY` が残る
 
 $$
 \begin{aligned}
 \mathrm{FACT\_GEN} &= \lambda s.\,\lambda n.\,\cdots\,(s\,s)\,(\mathrm{PRED}\,n)\,\cdots \\
-&=_\beta \lambda s.\,\bigl(\lambda f.\,\lambda n.\,\cdots\,f\,(\mathrm{PRED}\,n)\,\cdots\bigr)\,(s\,s) \\
-&= \lambda s.\,F\,(s\,s) \\
-F &= \lambda f.\,\lambda n.\,\cdots\,f\,(\mathrm{PRED}\,n)\,\cdots \quad \text{ふつうの再帰の形}
+&=_\beta \lambda s.\,\underbrace{\bigl(\lambda f.\,\lambda n.\,\cdots\,f\,(\mathrm{PRED}\,n)\,\cdots\bigr)}_{F\ (\text{Python では }\mathrm{FACT\_BODY})}\,(s\,s)
 \end{aligned}
 $$
-
-$=_\beta$（β同値）は、β簡約を逆向きも含めて何回か使うと移り合えることで、2 行目を β簡約すると 1 行目に戻る
-
-<!-- 目安 2 分。FACT_GEN は動きますが、本体を書く人が s(s) という書き方を知っていなければならないので、s(s) を本体の外へ出します。…の部分は IF や MUL など、変わらない部分です。1 行目の (s s) を、外から引数 f として渡してもらう形に書き換えたのが 2 行目です。2 行目を β簡約すると f に (s s) が入って 1 行目に戻るので、2 行目は 1 行目に β簡約を逆向きに使ったものです。このように、β簡約を前向きにも逆向きにも使って移り合えることを β同値と呼び、イコールに β を添えて書きます。こうして括弧の中に s(s) を含まないふつうの再帰の形 F が取り出せて、FACT_GEN は「F に s s を渡すもの」になりました。ただし、ラムダ計算としては同じですが、Python では評価のタイミングが変わります。元の FACT_GEN では s(s) が lambda _: のサンクの中にありましたが、2 行目では s s が F の引数として外に出ていて、この違いが、後で Python の Y が止まらない原因になります。 -->
-
----
-
-## `FACT_BODY`：再帰の相手を引数 `fact` で受け取る
-
-F を Python で書き、再帰呼び出しの相手は引数 `fact` で受け取る
 
 ```python
 FACT_BODY = lambda fact: lambda n: (
@@ -1031,50 +1027,30 @@ FACT_BODY = lambda fact: lambda n: (
 )
 ```
 
-```python
->>> to_int(FACT_BODY(FACT_GEN(FACT_GEN))(FIVE))
-120
-```
+<p class="note">=<sub>β</sub>（β同値）：β簡約を逆向きも含めて使うと移り合えること。2 行目を β簡約すると 1 行目に戻る</p>
 
-本物の階乗を fact に渡せば階乗になるので、残る問題はその fact をどう作るか
-
-<!-- 目安 0.5 分。F を Python で書いたのが FACT_BODY で、最初の FACT とほぼ同じですが、FACT と書いていたところが引数 fact になっています。さっき動いた FACT_GEN(FACT_GEN) を fact として渡すと、120 になります。つまり、本物の階乗さえもらえれば FACT_BODY は階乗になるので、残る問題は、その本物をどう作るかです。 -->
+<!-- 目安 2.5 分。FACT_GEN は動きますが、本体を書く人が s(s) という書き方を知っていなければならないので、s(s) を本体の外へ出します。…の部分は IF や MUL など、変わらない部分です。1 行目の (s s) を、外から引数 f として渡してもらう形に書き換えたのが 2 行目で、2 行目を β簡約すると f に (s s) が入って 1 行目に戻ります。このように、β簡約を前向きにも逆向きにも使って移り合えることを β同値と呼び、イコールに β を添えて書きます。こうして s(s) を含まないふつうの再帰の形 F が取り出せて、FACT_GEN は「F に s s を渡すもの」になりました。ただし、ラムダ計算としては同じですが、Python では評価のタイミングが変わります。元の FACT_GEN では s(s) が lambda _: のサンクの中にありましたが、2 行目では s s が F の引数として外に出ていて、この違いが、後で Python の Y が止まらない原因になります。F を Python で書いたのが下の FACT_BODY で、最初の FACT とほぼ同じですが、FACT と書いていたところが引数 fact になっています。本物の階乗、たとえばさっき動いた FACT_GEN(FACT_GEN) を fact として渡せば FACT_BODY は階乗になるので、残る問題は、その本物をどう作るかです。 -->
 
 ---
 
-## FACT_GEN を組み立て直すと Y コンビネータになる
+## FACT_GEN を組み立て直すと Y F になり、Y F は F の不動点
 
 $$
 \begin{aligned}
 \mathrm{FACT} &= \mathrm{FACT\_GEN}\;\mathrm{FACT\_GEN} \\
-&=_\beta (\lambda s.\,F\,(s\,s))\;(\lambda s.\,F\,(s\,s)) \\
-&=_\beta Y\,F \\
+&=_\beta (\lambda x.\,F\,(x\,x))\;(\lambda x.\,F\,(x\,x)) =_\beta Y\,F \\
+Y\,F &\twoheadrightarrow_\beta F\;\bigl((\lambda x.\,F\,(x\,x))\;(\lambda x.\,F\,(x\,x))\bigr) =_\beta F\;(Y\,F) \\
 Y &= \lambda f.\,(\lambda x.\,f\,(x\,x))\,(\lambda x.\,f\,(x\,x))
 \end{aligned}
 $$
 
-3・4 行目は、2 行目の F を引数 f にくくり出したもの（s は x に α変換）で、Y にふつうの再帰の形 F を渡すと、再帰する関数が返ってくる
+- 2 行目は λs. F (s s) の s を x に α変換したもので、F を f にくくり出すと Y になる
+- F p = p となる p を不動点 (fixed point) と呼び、**Y F は F の不動点**
+- FACT = F FACT となり、`FACT = … FACT …` が名前を使わずに成り立つ
 
 <p class="note">コンビネータ (combinator)：自由変数のない λ 項で、Y も、この後の Z も、<a href="#ski">8 章</a>の S・K・I もこれに当たる</p>
 
-<!-- 目安 1 分。さっきの結果を使って組み立て直します。FACT は FACT_GEN を FACT_GEN に渡したもので、FACT_GEN は λs. F (s s) と β同値だったので、これを 2 つ並べるだけです。ここで F は階乗に限らず何でもよいので、F を引数 f にくくり出し、変数名 s を x に付け替えると Y コンビネータになります。コンビネータとは、2 章の自由変数を 1 つも含まない λ 項のことです。Y は、ふつうの再帰の形をした関数を渡すと、再帰する関数を返します。Y の式は、自分を引数でもらう工夫を整理すると、このように出てきます。 -->
-
----
-
-## Y F は F の不動点
-
-$$
-\begin{aligned}
-Y\,F &\twoheadrightarrow_\beta (\lambda x.\,F\,(x\,x))\;(\lambda x.\,F\,(x\,x)) \\
-&\twoheadrightarrow_\beta F\;\bigl((\lambda x.\,F\,(x\,x))\;(\lambda x.\,F\,(x\,x))\bigr) \\
-&=_\beta F\;(Y\,F)
-\end{aligned}
-$$
-
-- F p = p となる p を不動点 (fixed point) と呼び、**Y F は F の不動点**
-- FACT = Y F なら FACT = F FACT となり、最初に書きたかった `FACT = … FACT …` が名前なしで成り立つ
-
-<!-- 目安 1 分。Y F を簡約して確かめます。2 行目の F の引数全体は、Y F を 1 歩 β簡約した項、つまり 1 行目の右辺と同じなので、そこを逆向きに β展開すると Y F に戻り、最後の行は F (Y F) です。したがって Y F =β F (Y F) で、β同値の意味で Y F は F の不動点です。関数 F に渡しても変わらない値を不動点と呼ぶので、Y は不動点を作るコンビネータ、不動点コンビネータ (fixed-point combinator) と呼ばれます。意味を読むと、FACT = Y F は「fact として FACT 自身を渡された FACT_BODY」です。最初のスライドで書きたかった、自分の名前を使う式が、名前を使わずに成り立ちました。 -->
+<!-- 目安 2 分。前のスライドの結果を使って組み立て直します。FACT は FACT_GEN を FACT_GEN に渡したもので、FACT_GEN は λs. F (s s) と β同値だったので、これを 2 つ並べて変数名 s を x に付け替えたのが 2 行目です。F は階乗に限らず何でもよいので、F を引数 f にくくり出すと最後の行の Y コンビネータになり、FACT は Y F と β同値です。コンビネータとは、2 章の自由変数を 1 つも含まない λ 項のことです。続いて Y F を簡約して確かめます。Y F を 1 歩 β簡約すると 2 行目の項になり、もう 1 歩で F (…) になりますが、括弧の中は 2 行目の項そのものなので Y F と β同値で、Y F =β F (Y F) です。関数 F に渡しても変わらない値を不動点と呼ぶので Y F は F の不動点で、Y は不動点コンビネータ (fixed-point combinator) と呼ばれます。Y は、ふつうの再帰の形をした関数を渡すと、再帰する関数を返します。FACT = Y F なので FACT = F FACT となり、FACT は「fact として FACT 自身を渡された FACT_BODY」です。最初のスライドで書きたかった、自分の名前を使う式が、名前を使わずに成り立ちました。 -->
 
 ---
 
@@ -1941,6 +1917,7 @@ $$x : A \to B \quad\text{かつ}\quad x : A \qquad\Rightarrow\qquad A = A \to B$
 
 - H. P. Barendregt. [The Lambda Calculus: Its Syntax and Semantics](https://shop.elsevier.com/books/the-lambda-calculus/barendregt/978-0-444-87508-2). North-Holland, 1981; revised ed. 1984.
 - B. C. Pierce. [Types and Programming Languages](https://mitpress.mit.edu/9780262162098/types-and-programming-languages/). MIT Press, 2002.
+- P. Wadler. [Propositions as Types](https://doi.org/10.1145/2699407). Communications of the ACM 58(12), 75–84, 2015.
 - 高橋正子『[計算論 計算可能性とラムダ計算](https://www.kindaikagaku.co.jp/book_list/detail/9784764901841/)』近代科学社, 1991.
 - T. Stuart. [Programming with Nothing](https://tomstu.art/programming-with-nothing). Ruby Manor 3 での講演と同名の記事, 2011.
 - T. Stuart. [Understanding Computation](https://www.oreilly.com/library/view/understanding-computation/9781449330071/). O'Reilly, 2013.
