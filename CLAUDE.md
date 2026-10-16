@@ -68,9 +68,11 @@
   - 定義は `code/lambda_core.py` と AST が一致すること。上から全部実行して通ること。
   - 演習の `MY_X = None` に正解を入れると、`check` が通ること。
 - **リンクの目印**
-  - 章扉の見出しは `# <span class="num" id="chN">N</span>…`。本文の「N 章」は `#chN` へのリンクにする。
+  - 章扉の見出しは `# <span class="num" id="chN">N</span>…`。本文の「N 章」は、章全体を指すとき（時間割の表など）は `#chN` へのリンクにする。
+  - 章の中の特定のスライドを指すとき（「正格評価（2 章）」「6 章の Z」など）は、そのスライドの見出しの先頭に `## <span id="strict-eval"></span>…` のように空の span で id を付け、「N 章」をその id へのリンクにする。id は英小文字とハイフンの短い名前にし、リンクされていないスライドには付けない。
+  - Marp の HTML（bespoke は id を含むスライドへ移動する）と PDF（Chrome が id を named destination にする）の両方で効く。
   - Colab へのリンクは `…/lambda.ipynb#scrollTo=secN`。
-  - ノートブックの「（スライド：「…」）」は、スライドの見出しと文字列を一致させる。
+  - ノートブックの「（スライド：「…」）」は、スライドの見出し（HTML タグを除いた文字列）と一致させる（`code/tests/test_notebook.py` で検査）。
 - **時間**
   - `tools/tally_time.py` は、見出しに「FizzBuzz を関数だけで」を含むかどうかで 7 章後半の区分を決めている。この見出しは変えない。
   - 時間割の表、冒頭の「必須のみ約 N 分」、`make time` の結果を一致させる。

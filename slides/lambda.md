@@ -254,7 +254,7 @@ $$(\lambda x.\,\lambda y.\,x)\;y \;\to_\beta\; \lambda w.\,y \qquad (\lambda y.\
 
 ---
 
-## Python は引数を先に評価する：正格評価
+## <span id="strict-eval"></span>Python は引数を先に評価する：正格評価
 
 ```python
 >>> (lambda x: "a")(print("引数を計算"))
@@ -266,7 +266,7 @@ $$(\lambda x.\,\lambda y.\,x)\;y \;\to_\beta\; \lambda w.\,y \qquad (\lambda y.\
 
 - 関数を呼ぶ前に、使わない引数も含めて引数を値まで評価する：正格評価 (strict evaluation)、値呼び (call by value)
 - lambda の本体は呼ばれるまで評価しないので、式を `lambda _:` で包むと評価を遅らせられる
-- この 2 点を [3 章](#ch3)の `IF` と [6 章](#ch6)の Y・Z で使う
+- この 2 点を [3 章](#thunk)の `IF` と [6 章](#y-strict)の Y・Z で使う
 
 <!--
 目安 0.75 分。Python は関数を呼ぶ前に引数を値まで評価し、これを正格評価、または値呼びと呼びます。1 つ目の例では、関数は x を使いませんが、引数の print が先に実行されます。一方、lambda の本体は呼ばれるまで評価されません。2 つ目の例では print を lambda _: で包んだので、引数を評価しても関数ができるだけで、print は実行されません。3 章では正格評価のために IF が両方の枝を評価する問題が起き、lambda で包んで解決します。6 章の Y と Z でも同じ問題と解決方法が出てきます。
@@ -287,7 +287,7 @@ $$\lambda v.\,M\,v \;\to_\eta\; M \qquad (v \text{ は } M \text{ に自由に�
 
 - 引数をそのまま M に渡す関数は M と同じ：η変換 (eta conversion)、逆向きは η展開 (eta expansion)
 - Python では評価のタイミングが違う：`lambda v: M(v)` は、呼ばれるまで M を評価しない
-- [6 章](#ch6)の Z コンビネータで、この違いを使う
+- [6 章](#z-comb)の Z コンビネータで、この違いを使う
 
 <!--
 目安 0.75 分。発展です。受け取った v をそのまま M に渡すだけの関数 λv. M v は M と同じふるまいをし、これを η変換と呼びます。Python でも lambda v: len(v) と len は同じ結果を返します。逆向きに M を λv. M v に書き換えることは η展開と呼びます。ただし Python では違いが 1 つあり、lambda v: M(v) は呼ばれるまで M を評価しません。これは前のスライドで見た lambda の性質です。6 章の Z コンビネータは、この違いを使って Y が止まらない問題を解決します。
@@ -377,7 +377,7 @@ $$\mathrm{IF}\;\mathrm{TRUE}\;a\;b \;\twoheadrightarrow_\beta\; \mathrm{TRUE}\;a
 
 ---
 
-## `NOT` と `AND`：真偽値に渡す候補を工夫する
+## <span id="not-and"></span>`NOT` と `AND`：真偽値に渡す候補を工夫する
 
 ```python
 NOT = lambda b: b(FALSE)(TRUE)
@@ -440,7 +440,7 @@ OR = lambda a: lambda b: a(TRUE)(b)
 
 ---
 
-## 正格評価のため `IF` の枝をサンクで包む
+## <span id="thunk"></span>正格評価のため `IF` の枝をサンクで包む
 
 ```python
 >>> IF(TRUE)(TRUE)((lambda x: x(x))(lambda x: x(x)))
@@ -452,8 +452,8 @@ RecursionError: maximum recursion depth exceeded
 True
 ```
 
-- 正格評価（[2 章](#ch2)）のため、`IF` が選ぶ前に else 側の止まらない式を評価する
-- 対策：枝を `lambda _:` で包んだサンク (thunk) にし、選んだ枝に `(ID)` を渡して呼ぶ（[6 章](#ch6)でも使う）
+- 正格評価（[2 章](#strict-eval)）のため、`IF` が選ぶ前に else 側の止まらない式を評価する
+- 対策：枝を `lambda _:` で包んだサンク (thunk) にし、選んだ枝に `(ID)` を渡して呼ぶ（[6 章](#fact-gen)でも使う）
 
 <!--
 目安 1.25 分。1 つ目の例では、else 側に、自分自身を呼び続けて終わらない式を置いています。TRUE を選ぶので else 側は使われないはずですが、RecursionError になります。2 章で見たとおり、Python は関数を呼ぶ前に引数をすべて評価するので、IF に渡す前に else 側の評価が始まって終わらないからです。この式は 6 章で Ω として扱います。対策は、両方の枝を lambda _: で包むことです。lambda の本体は呼ばれるまで評価されないので、IF は包んだ枝の一方を選ぶだけで、選んだ枝に ID を渡したときに初めて中身が評価されます。渡す値は何でもよいのですが、ID を使うと決めておきます。このように包んだ式をサンクと呼び、6 章で再帰を書くときにもそのまま使います。
@@ -517,7 +517,7 @@ XOR = lambda a: lambda b: a(NOT(b))(b)
 
 ---
 
-## チャーチ数：数 n を「f を n 回適用する関数」で表す
+## <span id="church-num"></span>チャーチ数：数 n を「f を n 回適用する関数」で表す
 
 ```python
 ZERO = lambda f: lambda x: x
@@ -583,7 +583,7 @@ TEN = SUCC(NINE)
 
 ---
 
-## `ADD`：n に `SUCC` を m 回適用する
+## <span id="add"></span>`ADD`：n に `SUCC` を m 回適用する
 
 $$\mathrm{ADD}\;m\;n = m\;\mathrm{SUCC}\;n = \mathrm{SUCC}^m\,n$$
 
@@ -703,7 +703,7 @@ IS_ZERO = lambda n: n(lambda _: FALSE)(TRUE)
 - 目標：`IS_EVEN(FOUR)` は真、`IS_EVEN(SEVEN)` は偽
 - `IS_ZERO` と同じく、n に f と x を渡す
 
-<p class="note">ヒント：0 は偶数で、1 増えるたびに偶奇は反転する（真偽値を反転する関数は <a href="#ch3">3 章</a>で作った）</p>
+<p class="note">ヒント：0 は偶数で、1 増えるたびに偶奇は反転する（真偽値を反転する関数は <a href="#not-and">3 章</a>で作った）</p>
 
 <!--
 目安 2 分。発展の演習です。IS_ZERO の形を思い出しながら f と x に何を渡せばよいか考えてもらい、1 分半ほど待ちます。
@@ -725,7 +725,7 @@ IS_EVEN = lambda n: n(NOT)(TRUE)
 ```
 
 - `TRUE`（0 は偶数）から始めて、`NOT` を n 回適用する
-- [4 章](#ch4)の数 n に、[3 章](#ch3)の `NOT` をそのまま渡せる
+- [4 章](#church-num)の数 n に、[3 章](#not-and)の `NOT` をそのまま渡せる
 
 <!--
 目安 1 分。x に TRUE、f に NOT を渡すので、NOT を偶数回かければ TRUE のまま、奇数回なら FALSE です。真偽値も数も関数なので、数に真偽値の関数をそのまま渡せます。
@@ -837,7 +837,7 @@ SUB = lambda m: lambda n: ...
 # to_int(SUB(SEVEN)(THREE)) が 4 になれば正解
 ```
 
-<p class="note">ヒント：数 n は「何かを n 回適用する」関数なので、m に何を n 回適用すればよいか（<a href="#ch4">4 章</a>の ADD も参考になる）</p>
+<p class="note">ヒント：数 n は「何かを n 回適用する」関数なので、m に何を n 回適用すればよいか（<a href="#add">4 章</a>の ADD も参考になる）</p>
 
 <!-- 目安 2 分。発展の演習で、1 分半ほど考えてもらいます。ヒントは 4 章の ADD で、ADD は「n に SUCC を m 回」でした。SUB は「m に PRED を n 回」なので、関数を替えるだけでなく、m と n の役割も入れ替えます。そこに気づけば一行で書けます。 -->
 
@@ -961,7 +961,7 @@ RecursionError: ...
 
 ---
 
-## `FACT_GEN`：再帰の相手を引数 `s` で受け取る
+## <span id="fact-gen"></span>`FACT_GEN`：再帰の相手を引数 `s` で受け取る
 
 ```python
 FACT_GEN = lambda s: lambda n: (
@@ -1055,7 +1055,7 @@ $$
 
 3・4 行目は、2 行目の F を引数 f にくくり出したもの（s は x に α変換）で、Y にふつうの再帰の形 F を渡すと、再帰する関数が返ってくる
 
-<p class="note">コンビネータ (combinator)：自由変数のない λ 項で、Y も、この後の Z も、<a href="#ch8">8 章</a>の S・K・I もこれに当たる</p>
+<p class="note">コンビネータ (combinator)：自由変数のない λ 項で、Y も、この後の Z も、<a href="#ski">8 章</a>の S・K・I もこれに当たる</p>
 
 <!-- 目安 1 分。さっきの結果を使って組み立て直します。FACT は FACT_GEN を FACT_GEN に渡したもので、FACT_GEN は λs. F (s s) と β同値だったので、これを 2 つ並べるだけです。ここで F は階乗に限らず何でもよいので、F を引数 f にくくり出し、変数名 s を x に付け替えると Y コンビネータになります。コンビネータとは、2 章の自由変数を 1 つも含まない λ 項のことです。Y は、ふつうの再帰の形をした関数を渡すと、再帰する関数を返します。Y の式は、自分を引数でもらう工夫を整理すると、このように出てきます。 -->
 
@@ -1078,7 +1078,7 @@ $$
 
 ---
 
-## Python の Y は引数を先に評価して止まらない
+## <span id="y-strict"></span>Python の Y は引数を先に評価して止まらない
 
 <div class="cols">
 <div>
@@ -1107,7 +1107,7 @@ W = lambda x: F(x(x))  Y(F) = W(W) -> F(W(W)) -> F(F(W(W))) ...
 F を呼ぶ前に引数 W(W) を評価するので、F は一度も呼ばれない
 ```
 
-- FACT_GEN の `s(s)` と違って Y の `x x` はサンクの中にないので、正格評価（[2 章](#ch2)）のため `Y(FACT_BODY)` を評価した時点で止まらない
+- FACT_GEN の `s(s)` と違って Y の `x x` はサンクの中にないので、正格評価（[2 章](#strict-eval)）のため `Y(FACT_BODY)` を評価した時点で止まらない
 
 <!-- 目安 1.75 分。理屈は完成したので Python で書きます。Y の定義はそのまま写せますが、Y(FACT_BODY) は RecursionError になり、数を渡して呼び出す前に、Y(FACT_BODY) を評価する段階で落ちています。原因は 3 章の IF と同じ正格評価です。Y(F) は W を W に渡したもので、W(W) を評価すると F(W(W)) になりますが、Python は F を呼ぶ前に引数の W(W) を評価しようとします。それがまた F(W(W)) になり、F が一度も呼ばれないまま展開が続きます。正規順序なら、Y F に ZERO を渡した項は外側の F、つまり FACT_BODY から簡約されるので、fact を使わずに ONE まで行けます。FACT_GEN が動いたのは、s(s) が lambda _: のサンクの中にあり、呼ばれるまで評価されなかったからです。外へ出したことで x x は F の引数になり、F を呼ぶ前に評価されるようになりました。 -->
 
@@ -1115,7 +1115,7 @@ F を呼ぶ前に引数 W(W) を評価するので、F は一度も呼ばれな�
 
 <!-- _class: twocol -->
 
-## Z コンビネータ：Y の x x を η展開で包む
+## <span id="z-comb"></span>Z コンビネータ：Y の x x を η展開で包む
 
 <div class="cols">
 <div>
@@ -1222,7 +1222,7 @@ SUM_TO_N = Z(lambda sum_to_n: lambda n: (
 
 <!-- _class: optional -->
 
-## `FIB`：本体で自分を 2 回呼ぶ再帰
+## <span id="fib"></span>`FIB`：本体で自分を 2 回呼ぶ再帰
 
 ```python
 FIB = Z(lambda fib: lambda n: (
@@ -1333,7 +1333,7 @@ RANGE = Z(lambda range_: lambda m: lambda n: (
 [1, 2, 3, 4, 5]
 ```
 
-- [6 章](#ch6)の Z と、`IF(c)(lambda _: A)(lambda _: B)(ID)` の形で書く
+- [6 章](#z-comb)の Z と、`IF(c)(lambda _: A)(lambda _: B)(ID)` の形で書く
 - m ≤ n なら m を先頭に置いて残りを m+1 から n までとし、それ以外は `NIL`
 
 <!--
@@ -1681,7 +1681,7 @@ FIFTEEN = MUL(THREE)(FIVE)
 
 <!-- _class: twocol optional -->
 
-## コンビネータ `S`、`K`、`I`：`I` は `S K K`
+## <span id="ski"></span>コンビネータ `S`、`K`、`I`：`I` は `S K K`
 
 <div class="cols">
 <div>
@@ -1818,7 +1818,7 @@ $$
 - $I = S\,K\,K$ なので、$S$ と $K$ の 2 つで足りる
 - この体系はラムダ計算と同じ計算能力を持つ：**チューリング完全** (Turing complete)
 
-<p class="note"><a href="#ch6">6 章</a>の Z も、FizzBuzz も、原理的には S と K の適用だけで書ける（とても長くなる）</p>
+<p class="note"><a href="#z-comb">6 章</a>の Z も、FizzBuzz も、原理的には S と K の適用だけで書ける（とても長くなる）</p>
 
 <!--
 目安 1 分。この章のまとめです。ブラケット抽象を使えばどんな λ 項からも λ を消せて、自由変数はそのまま残りますが、自由変数のない閉じた項なら S、K、I の適用だけの式になります。しかも I は S K K なので、S と K の 2 つだけで足ります。この体系はラムダ計算と同じ計算能力を持つので、チューリング機械とも同じ、つまりチューリング完全です。この章で見た Z や FizzBuzz も、原理的には S と K を並べた式で書けます。1 章では無名関数と関数呼び出しだけで計算を定義しましたが、道具はさらに S と K の 2 つと適用まで減らせることになります。
@@ -1904,7 +1904,7 @@ $$x : A \to B \quad\text{かつ}\quad x : A \qquad\Rightarrow\qquad A = A \to B$
 
 | 計算 | 最後まで動いた最大の $n$ | 次の値 |
 |---|---:|---|
-| `FIB`（[6 章](#ch6)発展） | 16 | RecursionError |
+| `FIB`（[6 章](#fib)発展） | 16 | RecursionError |
 | `SUM_TO_N` | 44 | RecursionError |
 | `FACT` | 11（約 10 秒） | 15 秒で打ち切り（時間切れ） |
 

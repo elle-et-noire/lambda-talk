@@ -46,6 +46,9 @@
 8. **thesis スライドの結びと「講義」の表現**
    - 「決定問題を判定する機械的な手順はない」という結論を、thesis スライドの締めの段落から thesis の箇条書きの中へ移した（締めに置くと、次のスライドでその続きが来ると期待させるため）。
    - 「講義」という語をスライド・ノートブック・Makefile・CSS・CLAUDE.md から外し、CLAUDE.md の文体の基準に「講義という体にしない」を足した。
+9. **ページ内リンクをスライド単位に**
+   - 章の中の特定のスライドを指す 14 か所を、見出しの先頭の空の span に付けた id（`strict-eval`、`not-and`、`thunk`、`church-num`、`add`、`fact-gen`、`y-strict`、`z-comb`、`fib`、`ski`）へのリンクに変えた。時間割の表は `#chN` のまま。
+   - ノートブックの「（スライド：「…」）」と見出しの一致を検査するテスト `test_slide_references_match_titles` を足した（見出しは HTML タグを除いて比べる）。
 
 未コミットの変更はない。
 
@@ -71,9 +74,9 @@
   - snap 版の Chromium は `/tmp` などを `file://` で読めないので、スクリプト内の HTTP サーバー経由で開いている。
   - この環境には Chrome が入っておらず、`/tmp/penrose-playwright-browsers/chromium-1248/chrome-linux64/chrome` を `CHROME_PATH` に指定して使った（/tmp なので消えることがある）。marp-cli で使うときは「No usable sandbox」になるので、`--no-sandbox` を付けるラッパーを `--browser-path` に渡す。
   - 見た目は `make png` で確かめる。1 枚だけなら marp-cli の `--images png` を一時ディレクトリに出す。
-- **PDF の内部リンク**：`make pdf` の後に pypdf で確かめる。各ページの注釈の `/Dest` が、`named_destinations` に `/ch1`〜`/ch9` として存在すればよい。
+- **PDF の内部リンク**：`make pdf` の後に pypdf で確かめる。各ページの注釈の `/Dest` が、すべて `named_destinations` に存在すればよい（章扉の `/ch1`〜`/ch9` と、スライドに付けた id）。
   ```sh
-  uv run --no-project --with pypdf python -c "import pypdf; r=pypdf.PdfReader('out/lambda.pdf'); print(sorted(k for k in r.named_destinations if k.startswith('/ch')))"
+  uv run --no-project --with pypdf python -c "import pypdf; r=pypdf.PdfReader('out/lambda.pdf'); nd=set(r.named_destinations); ds={a.get_object().get('/Dest') for p in r.pages for a in (p.get('/Annots') or []) if a.get_object().get('/Dest')}; print(sorted(nd)); print('missing:', sorted(d for d in ds if d not in nd))"
   ```
 - **PDF のフォント**：`pdffonts out/lambda.pdf` で Noto 系が埋め込まれていることを見る。罫線が DejaVu に化けていないか（7 章のリストの図）も見る。
 - **デプロイ**：push 後、`gh run list --workflow pages.yml --limit 1` で run を探し、`gh run watch <id> --exit-status` で結果を待つ。

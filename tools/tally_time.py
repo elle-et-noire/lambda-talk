@@ -49,6 +49,7 @@ for i, s in enumerate(slides, 1):
     per_ch[chapter][cat] += t
     if verbose:
         title = (re.search(r"^#+ (.*)$", s, re.M) or [None, "?"])[1]
+        title = re.sub(r"<[^>]+>", "", title)
         flag = " !" if nchars / 300 > t + 0.26 else ""
         print(f"{i:3d} ch{chapter} {cat:4s} {t:5.2f} {nchars:4d}字{flag} {title[:40]}")
 print("slides:", len(slides))

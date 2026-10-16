@@ -12,7 +12,9 @@ from tools.check_slides import CORE, definitions
 from conftest import ROOT
 
 NOTEBOOK = ROOT / "notebooks" / "lambda.ipynb"
+SLIDES = ROOT / "slides" / "lambda.md"
 EXERCISE = re.compile(r"^(MY_(\w+)) = None", re.MULTILINE)
+SLIDE_REF = re.compile(r"（スライド：「(.*?)」）")
 
 
 @pytest.fixture(scope="module")
@@ -45,6 +47,23 @@ def test_saved_without_outputs(notebook):
         if cell["cell_type"] == "code":
             assert cell["outputs"] == []
             assert cell["execution_count"] is None
+
+
+def slide_titles(markdown):
+    """スライドの見出しの文字列（HTML タグを除く）。コードブロックの中は除く。"""
+    markdown = re.sub(r"^```.*?^```", "", markdown, flags=re.MULTILINE | re.DOTALL)
+    return {re.sub(r"<[^>]+>", "", m) for m in
+            re.findall(r"^#{1,6} (.*?)\s*$", markdown, re.MULTILINE)}
+
+
+def test_slide_references_match_titles(notebook):
+    titles = slide_titles(SLIDES.read_text(encoding="utf-8"))
+    # 「A」「B」と複数並ぶことがある
+    refs = [ref for cell in notebook["cells"] if cell["cell_type"] == "markdown"
+            for group in SLIDE_REF.findall("".join(cell["source"]))
+            for ref in group.split("」「")]
+    assert refs
+    assert [ref for ref in refs if ref not in titles] == []
 
 
 def test_python310_syntax(notebook):
