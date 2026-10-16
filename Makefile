@@ -1,4 +1,4 @@
-# 講義スライド「Lambda Calculus in Python」のビルド
+# スライド「Lambda Calculus in Python」のビルド
 #   make html | pdf | pdf-notes | png | check | test | all | sample | webfonts | clean
 # ブラウザを変えたいときは CHROME_PATH=/path/to/chrome make pdf
 
