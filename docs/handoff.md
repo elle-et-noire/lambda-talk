@@ -1,4 +1,4 @@
-# 引き継ぎメモ（2026-10-16、`745aac8` 時点）
+# 引き継ぎメモ（2026-10-16）
 
 恒常的な指示・制約・文体の基準は [CLAUDE.md](../CLAUDE.md) にある。このファイルには、その時点の状況だけを書く。
 
@@ -37,6 +37,12 @@
    - `slides/_sample.md` の h2 を、3 つ並べの旧サブタイトルから「見出し 2 の見本」に変えた。
    - 和名と英語名の併記を、初出だけに変えた（CLAUDE.md の「表記」も更新）。もともと重複は少なく、外したのはスライドの 2 か所（4 章のチャーチ数、6 章の η展開）だけ。ノートブックは変更なし。
    - 1 章「1930 年代」のスピーカーノートを約 590 字から 401 字に縮め、`tally_time.py -v` の警告を消した。目安 1.5 分は変えていない。
+7. **1 章を決定問題からの動機付けに組み替え**（ユーザーの指摘：道具を減らす理由が不透明だった）
+   - 冒頭はタイトル → 今日作るもの → 時間割だけにし、「lambda と関数呼び出しだけで書く」を 1 章の最後へ移した。
+   - 1 章は、決定問題（判定する手順がないと示すには手順を数学的に定義する必要がある）→ 同値性の定理と Church–Turing thesis → lambda と関数呼び出しだけで書く、の順。
+   - 「Python の道具を減らしていく」は、理由なしに問いを置いていたので削除した。
+   - 参考文献に Church 1936「A Note on the Entscheidungsproblem」（DOI 10.2307/2269326）と Hilbert–Ackermann 1928（初版に DOI がないのでリンクなし、CiNii で書誌を確認）を足した。参考文献 2 枚は `.refs` クラスで行間を詰めた（`theme/quiet.css`）。
+   - 時間：冒頭 2.25 → 1.25 分、1 章 2.5 → 3.5 分で、必須 46.5 分は変わらない。
 
 未コミットの変更はない。
 
@@ -60,6 +66,7 @@
   - KaTeX の MathML と SVG の `path` は誤検出になるので除いている。
   - puppeteer-core は、marp-cli が npx キャッシュ（`~/.npm/_npx/*/node_modules/puppeteer-core`）に入れたものを使う。見つからなければ `PUPPETEER_CORE` で、ブラウザは `CHROME_PATH` で指定する。
   - snap 版の Chromium は `/tmp` などを `file://` で読めないので、スクリプト内の HTTP サーバー経由で開いている。
+  - この環境には Chrome が入っておらず、`/tmp/penrose-playwright-browsers/chromium-1248/chrome-linux64/chrome` を `CHROME_PATH` に指定して使った（/tmp なので消えることがある）。marp-cli で使うときは「No usable sandbox」になるので、`--no-sandbox` を付けるラッパーを `--browser-path` に渡す。
   - 見た目は `make png` で確かめる。1 枚だけなら marp-cli の `--images png` を一時ディレクトリに出す。
 - **PDF の内部リンク**：`make pdf` の後に pypdf で確かめる。各ページの注釈の `/Dest` が、`named_destinations` に `/ch1`〜`/ch9` として存在すればよい。
   ```sh

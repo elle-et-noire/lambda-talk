@@ -276,6 +276,8 @@ td code { font-size: 0.88em; }
 .note { font-size: 22px; color: var(--muted); line-height: 1.55; }
 .small { font-size: 24px; }
 .small pre code { font-size: 22px; }
+/* 参考文献：項目の間隔と行送りを詰める */
+.refs li { margin: 0.15em 0; line-height: 1.4; }
 .muted { color: var(--muted); }
 .center { text-align: center; }
 
