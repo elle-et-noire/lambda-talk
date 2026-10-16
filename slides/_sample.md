@@ -11,7 +11,7 @@ size: 16:9
 
 # Lambda Calculus in Python
 
-## 1 引数の lambda で真偽値・数・再帰を作る
+## 見出し 2 の見本
 
 2026 年 10 月　サンプル講義
 
