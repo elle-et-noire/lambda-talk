@@ -1,0 +1,9 @@
+# Marp CLI 設定（marp-cli v4.5.1）
+# スライドの front-matter では `theme: quiet` を指定する。
+html: true
+allowLocalFiles: true
+themeSet:
+  - ./theme
+theme: quiet
+pdfNotes: false
+pdfOutlines: false

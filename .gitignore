@@ -1,0 +1,17 @@
+# ビルド成果物（make html / pdf / png / sample で再生成）
+out/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node（npx キャッシュ等）
+node_modules/
+
+# エディタ / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store

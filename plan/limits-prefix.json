@@ -1,0 +1,472 @@
+{
+  "python": "3.14.7 (main, Sep 29 2026, 15:01:40) [Clang 22.1.3 ]",
+  "executable": "/home/lomega/utmc/lambda-python/lambda-talk/.venv/bin/python",
+  "platform": "Linux-6.18.54.1-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "recursion_limit": 1000,
+  "stack_prefix": true,
+  "timeout_seconds": 15,
+  "measurements": {
+    "FACT": {
+      "direct": {
+        "largest_completed": 44,
+        "next_n": 45,
+        "next_status": "recursion",
+        "seconds_at_largest": 0.0010624289998304448,
+        "probes": {
+          "0": {
+            "status": "ok",
+            "seconds": 7.915000423963647e-06
+          },
+          "1": {
+            "status": "ok",
+            "seconds": 1.1750000339816324e-05
+          },
+          "2": {
+            "status": "ok",
+            "seconds": 1.5681999684602488e-05
+          },
+          "4": {
+            "status": "ok",
+            "seconds": 2.8281000140850665e-05
+          },
+          "8": {
+            "status": "ok",
+            "seconds": 5.694500032404903e-05
+          },
+          "16": {
+            "status": "ok",
+            "seconds": 0.00022329099965645582
+          },
+          "32": {
+            "status": "ok",
+            "seconds": 0.0006098139997448015
+          },
+          "40": {
+            "status": "ok",
+            "seconds": 0.0009097850002035557
+          },
+          "44": {
+            "status": "ok",
+            "seconds": 0.0010531389998504892
+          },
+          "45": {
+            "status": "recursion",
+            "seconds": 0.0012065759997312853
+          },
+          "46": {
+            "status": "recursion",
+            "seconds": 0.0014057960001991887
+          },
+          "48": {
+            "status": "recursion",
+            "seconds": 0.0013525600002139981
+          },
+          "64": {
+            "status": "recursion",
+            "seconds": 0.002071567000257346
+          }
+        }
+      },
+      "doctest": {
+        "largest_completed": 44,
+        "next_n": 45,
+        "next_status": "recursion",
+        "seconds_at_largest": 0.03180443800010835,
+        "probes": {
+          "0": {
+            "status": "ok",
+            "seconds": 0.0004813620003005781
+          },
+          "1": {
+            "status": "ok",
+            "seconds": 0.0005031650002820243
+          },
+          "2": {
+            "status": "ok",
+            "seconds": 0.0005528349997803161
+          },
+          "4": {
+            "status": "ok",
+            "seconds": 0.0007990479998625233
+          },
+          "8": {
+            "status": "ok",
+            "seconds": 0.0015691159997004434
+          },
+          "16": {
+            "status": "ok",
+            "seconds": 0.004739614000300207
+          },
+          "32": {
+            "status": "ok",
+            "seconds": 0.016461182000057306
+          },
+          "40": {
+            "status": "ok",
+            "seconds": 0.02604185600011988
+          },
+          "44": {
+            "status": "ok",
+            "seconds": 0.03075242300019454
+          },
+          "45": {
+            "status": "recursion",
+            "seconds": 0.031265888000234554
+          },
+          "46": {
+            "status": "recursion",
+            "seconds": 0.030798229999618343
+          },
+          "48": {
+            "status": "recursion",
+            "seconds": 0.033207483000296634
+          },
+          "64": {
+            "status": "recursion",
+            "seconds": 0.031383837000248604
+          }
+        }
+      },
+      "smaller_completed": 44,
+      "safe_n": 35
+    },
+    "POW_TWO": {
+      "direct": {
+        "largest_completed": 498,
+        "next_n": 499,
+        "next_status": "recursion",
+        "seconds_at_largest": 0.0009154949998446682,
+        "probes": {
+          "0": {
+            "status": "ok",
+            "seconds": 7.085000106599182e-06
+          },
+          "1": {
+            "status": "ok",
+            "seconds": 1.1874999927385943e-05
+          },
+          "2": {
+            "status": "ok",
+            "seconds": 9.301999853050802e-06
+          },
+          "4": {
+            "status": "ok",
+            "seconds": 1.33369999275601e-05
+          },
+          "8": {
+            "status": "ok",
+            "seconds": 1.2140000308136223e-05
+          },
+          "16": {
+            "status": "ok",
+            "seconds": 1.904400005514617e-05
+          },
+          "32": {
+            "status": "ok",
+            "seconds": 4.67579998257861e-05
+          },
+          "64": {
+            "status": "ok",
+            "seconds": 7.485500009352108e-05
+          },
+          "128": {
+            "status": "ok",
+            "seconds": 0.00011487900019346853
+          },
+          "256": {
+            "status": "ok",
+            "seconds": 0.0002725710000959225
+          },
+          "384": {
+            "status": "ok",
+            "seconds": 0.0005150750002940185
+          },
+          "448": {
+            "status": "ok",
+            "seconds": 0.0005229260000305658
+          },
+          "480": {
+            "status": "ok",
+            "seconds": 0.0005109469998387794
+          },
+          "496": {
+            "status": "ok",
+            "seconds": 0.0005059509999227885
+          },
+          "498": {
+            "status": "ok",
+            "seconds": 0.0005342350000319129
+          },
+          "499": {
+            "status": "recursion",
+            "seconds": 0.0010230660000161151
+          },
+          "500": {
+            "status": "recursion",
+            "seconds": 0.0006430299999919953
+          },
+          "504": {
+            "status": "recursion",
+            "seconds": 0.0006524159998662071
+          },
+          "512": {
+            "status": "recursion",
+            "seconds": 0.0006419169999389851
+          }
+        }
+      },
+      "doctest": {
+        "largest_completed": 496,
+        "next_n": 497,
+        "next_status": "recursion",
+        "seconds_at_largest": 0.029064453000046342,
+        "probes": {
+          "0": {
+            "status": "ok",
+            "seconds": 0.0003739710000445484
+          },
+          "1": {
+            "status": "ok",
+            "seconds": 0.0004975320002813532
+          },
+          "2": {
+            "status": "ok",
+            "seconds": 0.0005558660000133386
+          },
+          "4": {
+            "status": "ok",
+            "seconds": 0.0006847479999123607
+          },
+          "8": {
+            "status": "ok",
+            "seconds": 0.0009190669998133671
+          },
+          "16": {
+            "status": "ok",
+            "seconds": 0.0014001099998495192
+          },
+          "32": {
+            "status": "ok",
+            "seconds": 0.00230115999966074
+          },
+          "64": {
+            "status": "ok",
+            "seconds": 0.004387169000438007
+          },
+          "128": {
+            "status": "ok",
+            "seconds": 0.007575929999802611
+          },
+          "256": {
+            "status": "ok",
+            "seconds": 0.014841743000033603
+          },
+          "384": {
+            "status": "ok",
+            "seconds": 0.022169222000229638
+          },
+          "448": {
+            "status": "ok",
+            "seconds": 0.02569274499956009
+          },
+          "480": {
+            "status": "ok",
+            "seconds": 0.029902951000167377
+          },
+          "496": {
+            "status": "ok",
+            "seconds": 0.03159430599998814
+          },
+          "497": {
+            "status": "recursion",
+            "seconds": 0.032042740999713715
+          },
+          "498": {
+            "status": "recursion",
+            "seconds": 0.030274932999873272
+          },
+          "500": {
+            "status": "recursion",
+            "seconds": 0.030673756999931356
+          },
+          "504": {
+            "status": "recursion",
+            "seconds": 0.03057513600015227
+          },
+          "512": {
+            "status": "recursion",
+            "seconds": 0.03280246300028011
+          }
+        }
+      },
+      "smaller_completed": 496,
+      "safe_n": 396,
+      "two_to_ten": {
+        "direct": {
+          "status": "ok",
+          "seconds": 0.000116934000288893
+        },
+        "doctest": {
+          "status": "ok",
+          "seconds": 0.00016075999974418664
+        }
+      }
+    },
+    "POW_BASE": {
+      "direct": {
+        "largest_completed": 249,
+        "next_n": 250,
+        "next_status": "recursion",
+        "seconds_at_largest": 0.0007067280002956977,
+        "probes": {
+          "0": {
+            "status": "ok",
+            "seconds": 3.9540000216220506e-06
+          },
+          "1": {
+            "status": "ok",
+            "seconds": 1.2743999832309783e-05
+          },
+          "2": {
+            "status": "ok",
+            "seconds": 1.4193999959388748e-05
+          },
+          "4": {
+            "status": "ok",
+            "seconds": 1.6404999769292772e-05
+          },
+          "8": {
+            "status": "ok",
+            "seconds": 2.3180999960459303e-05
+          },
+          "16": {
+            "status": "ok",
+            "seconds": 3.8544999824807746e-05
+          },
+          "32": {
+            "status": "ok",
+            "seconds": 7.163999998738291e-05
+          },
+          "64": {
+            "status": "ok",
+            "seconds": 0.0001716070000838954
+          },
+          "128": {
+            "status": "ok",
+            "seconds": 0.00032101399983730516
+          },
+          "192": {
+            "status": "ok",
+            "seconds": 0.000588184999742225
+          },
+          "224": {
+            "status": "ok",
+            "seconds": 0.0008063479999691481
+          },
+          "240": {
+            "status": "ok",
+            "seconds": 0.0005547709997699712
+          },
+          "248": {
+            "status": "ok",
+            "seconds": 0.0006023389996698825
+          },
+          "249": {
+            "status": "ok",
+            "seconds": 0.0005879579998691042
+          },
+          "250": {
+            "status": "recursion",
+            "seconds": 0.000815877000150067
+          },
+          "252": {
+            "status": "recursion",
+            "seconds": 0.0007147460000851424
+          },
+          "256": {
+            "status": "recursion",
+            "seconds": 0.0010324590002710465
+          }
+        }
+      },
+      "doctest": {
+        "largest_completed": 248,
+        "next_n": 249,
+        "next_status": "recursion",
+        "seconds_at_largest": 0.05069304700009525,
+        "probes": {
+          "0": {
+            "status": "ok",
+            "seconds": 6.42830000288086e-05
+          },
+          "1": {
+            "status": "ok",
+            "seconds": 0.0009402000000591215
+          },
+          "2": {
+            "status": "ok",
+            "seconds": 0.0010039600001618965
+          },
+          "4": {
+            "status": "ok",
+            "seconds": 0.0013575869998021517
+          },
+          "8": {
+            "status": "ok",
+            "seconds": 0.002427731999887328
+          },
+          "16": {
+            "status": "ok",
+            "seconds": 0.0038343719998010783
+          },
+          "32": {
+            "status": "ok",
+            "seconds": 0.006973751999794331
+          },
+          "64": {
+            "status": "ok",
+            "seconds": 0.013782310000351572
+          },
+          "128": {
+            "status": "ok",
+            "seconds": 0.027104048000182956
+          },
+          "192": {
+            "status": "ok",
+            "seconds": 0.03947120900011214
+          },
+          "224": {
+            "status": "ok",
+            "seconds": 0.04657612099981634
+          },
+          "240": {
+            "status": "ok",
+            "seconds": 0.048351739999816346
+          },
+          "248": {
+            "status": "ok",
+            "seconds": 0.05220569700031774
+          },
+          "249": {
+            "status": "recursion",
+            "seconds": 0.0521793459993205
+          },
+          "250": {
+            "status": "recursion",
+            "seconds": 0.049612857999818516
+          },
+          "252": {
+            "status": "recursion",
+            "seconds": 0.04978181099977519
+          },
+          "256": {
+            "status": "recursion",
+            "seconds": 0.05131415400046535
+          }
+        }
+      },
+      "smaller_completed": 248,
+      "safe_n": 198
+    }
+  }
+}
